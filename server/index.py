@@ -77,5 +77,7 @@ def get_documents():
 
 funcs.initialize_index()
 
+port = int(os.environ.get("PORT", 8080))
+
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=port)

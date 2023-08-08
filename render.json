@@ -1,0 +1,35 @@
+{
+  "build": {
+    "env": {
+      "NODE_VERSION": "18.14.0",
+      "PYTHON_VERSION": "3.10.2"
+    },
+    "output_directory": "out",
+    "command": "npm run build"
+  },
+  "static_sites": [
+    {
+      "name": "private-gpt-client",
+      "directory": "/client",
+      "publish": {
+        "branch": "main",
+        "command": "npm install && npm run build",
+        "public_directory": "out",
+        "env": {
+          "NODE_ENV": "production",
+          "API_URL": "https://privategpt-br2e.onrender.com"
+        }
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "private-gpt-backend",
+      "directory": "/server",
+      "env": {
+        "FLASK_ENV": "production"
+      },
+      "command": "pip install -r requirements.txt && python3 index.py"
+    }
+  ]
+}
