@@ -1,6 +1,6 @@
-Flask==2.2.5
-pypdf==3.9.0
-flask_cors==4.0.0
-llama_index==0.7.4
-python-dotenv==1.0.0
-Werkzeug==2.3.6
+Flask
+pypdf
+flask_cors
+llama_index
+python-dotenv
+Werkzeug
