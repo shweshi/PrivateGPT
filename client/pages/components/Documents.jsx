@@ -8,7 +8,7 @@ function Documents() {
     useEffect(()=>{
         setLoading(true)
         try{
-        fetch("http://localhost:8080//api/getDocuments", {
+        fetch(`${process.env.API_URL}/api/getDocuments`, {
             mode: 'cors',
             method: 'GET',
         })

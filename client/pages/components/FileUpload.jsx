@@ -18,7 +18,7 @@ function FileUpload() {
         formData.append('filename_as_doc_id', 'true');
     
         try{
-        const response = await fetch('http://localhost:8080/api/uploadFile', {
+        const response = await fetch(`${process.env.API_URL}/api/uploadFile`, {
         mode: 'cors',
         method: 'POST',
         body: formData,

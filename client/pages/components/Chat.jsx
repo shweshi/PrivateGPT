@@ -25,7 +25,7 @@ export default function Chat() {
   const sendMessage = async (text) => {
     setIsLoading(true);
 
-    const response = await fetch(`http://localhost:8080/api/query?text=${text}`)
+    const response = await fetch(`${process.env.API_URL}/api/query?text=${text}`)
     const data = await response.json()
     setChatLog((preChatLog)=>[...preChatLog, {type:"bot", message:data.message}]);
     setIsLoading(false)
