@@ -1,6 +1,7 @@
 import React from "react";
 import { Disclosure } from "@headlessui/react";
 import NewFileUpload from "./NewFileUpload";
+import Link from "next/link";
 
 export default function AppHeader() {
   return (
@@ -28,12 +29,12 @@ export default function AppHeader() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <span className="">
-                    <a
+                    <Link
                       href="/"
                       className="text-lg font-semibold text-white dark:text-white"
                     >
                       PrivateGPT
-                    </a>
+                    </Link>
                   </span>
                 </div>
               </div>
