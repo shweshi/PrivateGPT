@@ -1,13 +1,15 @@
-import React from 'react'
-import Chat from './components/Chat'
-import Navbar from './components/Navbar'
+import React from "react";
+import Chat from "./components/Chat";
+import AppLayout from "./components/AppLayout";
 
 function chat() {
   return (
     <div>
-      <Chat/>
+      <AppLayout>
+        <Chat />
+      </AppLayout>
     </div>
-  )
+  );
 }
 
-export default chat
+export default chat;

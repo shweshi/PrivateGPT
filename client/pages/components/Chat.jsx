@@ -1,11 +1,8 @@
-import { useState, useEffect } from "react";
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import { useState, useEffect, useRef } from "react";
+import { Inter } from "next/font/google";
 import TypingAnimation from "./TypingAnimation";
-import Link from "next/link";
-import Navbar from "./Navbar";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Chat() {
   const [inputValue, setInputValue] = useState("");
@@ -15,61 +12,98 @@ export default function Chat() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    setChatLog((prevChatLog) => [...prevChatLog, { type: 'user', message: inputValue }])
+    setChatLog((prevChatLog) => [
+      ...prevChatLog,
+      { type: "user", message: inputValue },
+    ]);
 
     sendMessage(inputValue);
-    
-    setInputValue('');
-  }
+
+    setInputValue("");
+  };
 
   const sendMessage = async (text) => {
     setIsLoading(true);
-    console.log('API URL:', process.env);
+    console.log("API URL:", process.env);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/query?text=${text}`)
-    const data = await response.json()
-    setChatLog((preChatLog)=>[...preChatLog, {type:"bot", message:data.message}]);
-    setIsLoading(false)
-  }
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/query?text=${text}`
+    );
+    const data = await response.json();
+    setChatLog((preChatLog) => [
+      ...preChatLog,
+      { type: "bot", message: data.message },
+    ]);
+    setIsLoading(false);
+  };
+
+  const chatContainerRef = useRef(null);
+
+  // Scroll to the bottom of the chat container
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      console.log('hiii')
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  // Call scrollToBottom when chatLog updates
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatLog]);
 
   return (
-    <div className="container mx-auto">
-    <div className="fixed left-0 top-0">
-    {/* <svg fill="#000000" height="200px" width="200px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 219.151 219.151" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M109.576,219.151c60.419,0,109.573-49.156,109.573-109.576C219.149,49.156,169.995,0,109.576,0S0.002,49.156,0.002,109.575 C0.002,169.995,49.157,219.151,109.576,219.151z M109.576,15c52.148,0,94.573,42.426,94.574,94.575 c0,52.149-42.425,94.575-94.574,94.576c-52.148-0.001-94.573-42.427-94.573-94.577C15.003,57.427,57.428,15,109.576,15z"></path> <path d="M94.861,156.507c2.929,2.928,7.678,2.927,10.606,0c2.93-2.93,2.93-7.678-0.001-10.608l-28.82-28.819l83.457-0.008 c4.142-0.001,7.499-3.358,7.499-7.502c-0.001-4.142-3.358-7.498-7.5-7.498l-83.46,0.008l28.827-28.825 c2.929-2.929,2.929-7.679,0-10.607c-1.465-1.464-3.384-2.197-5.304-2.197c-1.919,0-3.838,0.733-5.303,2.196l-41.629,41.628 c-1.407,1.406-2.197,3.313-2.197,5.303c0.001,1.99,0.791,3.896,2.198,5.305L94.861,156.507z"></path> </g> </g></svg> */}
-    </div>
-      <div className="flex flex-col h-screen">
-        <Navbar/>
-        <h1 className=" text-center py-3 font-bold text-5xl">Chat with Data</h1>
-        <div className="flex-grow p-6 lg:w-2/3 mx-auto">
-          <div className="flex flex-col space-y-4">
-            {
-                chatLog.map((message, index) => (
-                <div key={index} className={`flex ${
-                    message.type === 'user' ? 'justify-end' : 'justify-start'
-                    }`}>
-                    <div className={`${
-                        message.type === 'user' ? 'bg-purple-500' : 'bg-gray-800'
-                        } rounded-lg p-4 text-white max-w-sm`}>
-                        {message.message}
-                    </div>
-                </div>))}
-                {
-                    isLoading &&
-                    <div key={chatLog.length} className="flex justify-start">
-                        <div className="bg-gray-800 rounded-lg p-4 text-white max-w-sm">
-                            <TypingAnimation />
-                        </div>
-                    </div>
-                }
+    <div className="container mx-auto bg-[#191a23]  flex flex-col" style={{ minHeight: `calc(100vh - ${3}rem)` }}>
+      <div className="bg-[#191a23] border-gray-100 dark:border-gray-600 shadow-none sticky top-0">
+        <h1 className="text-center py-3 font-bold text-xl text-gray-300">
+          Chat with your PDF
+        </h1>
+      </div>
+      <div ref={chatContainerRef} className="flex-grow p-6 overflow-y-auto">
+        <div className="flex flex-col space-y-4 lg:w-2/3 mx-auto">
+          {chatLog.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                message.type === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`${
+                  message.type === "user" ? "bg-purple-500" : "bg-gray-800"
+                } rounded-lg px-2 py-2 text-white max-w-sm`}
+              >
+                {message.message}
+              </div>
             </div>
+          ))}
+          {isLoading && (
+            <div key={chatLog.length} className="flex justify-start">
+              <div className="bg-[#191a23] rounded-lg p-4 text-white max-w-sm">
+                <TypingAnimation />
+              </div>
+            </div>
+          )}
         </div>
-        <form onSubmit={handleSubmit} className="flex-none p-6 ">
-          <div className="flex rounded-lg border border-gray-700 bg-gray-800 lg:w-2/3 mx-auto">  
-            <input type="text" className="flex-grow px-4 py-2 bg-transparent text-white focus:outline-none" placeholder="Type your message..." value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-            <button type="submit" disabled={inputValue<=0} className="bg-purple-500 rounded-lg px-4 py-2 text-white font-semibold focus:outline-none hover:bg-purple-600 transition-colors duration-300 disabled:bg-gray-600">Send</button>
+      </div>
+      <form onSubmit={handleSubmit} className="flex-none p-6">
+        <div className="bg-[#191a23] p-4 flex flex-wrap rounded-lg border border-gray-700">
+          <input
+            type="text"
+            className="flex-grow px-4 py-2 bg-transparent text-white focus:outline-none"
+            placeholder="Type your message..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button
+            type="submit"
+            disabled={inputValue <= 0}
+            className="bg-indigo-500 rounded-full px-4 py-2 mt-2 md:mt-0 md:ml-2 text-white font-semibold focus:outline-none hover:bg-indigo-600 transition-colors duration-300 disabled:bg-gray-600 rounded-full"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2"><path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path></svg>
+          </button>
         </div>
-        </form>
-        </div>
+      </form>
     </div>
-  )
+  );
 }

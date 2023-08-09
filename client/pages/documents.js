@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './components/Navbar'
+import Navbar from './components/Header'
 import Documents from './components/Documents'
 
 function documents() {
